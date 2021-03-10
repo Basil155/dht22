@@ -96,8 +96,6 @@ int DhtAdd(int PinNumber)
     gpio_set_direction(PinNumber, GPIO_MODE_INPUT_OUTPUT_OD);
     gpio_set_level(PinNumber, 1);
 
-    PrintAll();
-
     return 0;
 }
 
@@ -113,15 +111,12 @@ int DhtRemove(int PinNumber)
         {
             free(*(_curr));
             *(_curr) = _next;
-            //_curr = &(_next);
         }
         else
         {
             _curr = &((*_curr)->next);
         }
     }
-
-    //PrintAll();
 
     return 0;
 }
@@ -149,7 +144,6 @@ static void dhtTask(void *pvParameter)
     RingbufHandle_t rb;
 
     rmt_config_t rmt_rx;
-    //TickType_t lastTick;
 
     rmt_rx.channel = _RmtChannel;
     //rmt_rx.gpio_num = DHT_RMT_PIN_NO;
@@ -174,7 +168,7 @@ static void dhtTask(void *pvParameter)
         {
             gpio_set_direction(_next->Pin, GPIO_MODE_INPUT_OUTPUT_OD);
             gpio_set_level(_next->Pin, 0);
-            //lastTick = xTaskGetTickCount();
+
             vTaskDelay(pdMS_TO_TICKS(15));
 
             gpio_set_level(_next->Pin, 1);
