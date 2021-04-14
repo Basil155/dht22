@@ -123,12 +123,44 @@ int DhtRemove(int PinNumber)
 
 double DhtGetHumidity(int PinNumber)
 {
-    return 0;
+    struct DhtData **_curr = &(_Head);
+    struct DhtData *_next;
+
+    while (*(_curr) != NULL)
+    {
+        _next = (*(_curr))->next;
+        if ((*(_curr))->Pin == PinNumber)
+        {
+            return 0.1 * (*(_curr))->Humidity10;
+        }
+        else
+        {
+            _curr = &((*_curr)->next);
+        }
+    }
+
+    return -1;
 }
 
 double DhtGetTemperature(int PinNumber)
 {
-    return 0;
+    struct DhtData **_curr = &(_Head);
+    struct DhtData *_next;
+
+    while (*(_curr) != NULL)
+    {
+        _next = (*(_curr))->next;
+        if ((*(_curr))->Pin == PinNumber)
+        {
+            return 0.1 * (*(_curr))->Temperature10;
+        }
+        else
+        {
+            _curr = &((*_curr)->next);
+        }
+    }
+
+    return -1;
 }
 
 static void dhtTask(void *pvParameter)
@@ -220,8 +252,8 @@ static void dhtTask(void *pvParameter)
                     if (((hh + hl + th + tl) & 255) == par)
                     {
 
-                        printf("Humidity: %f%%\n", 0.1 * (hh * 256 + hl));
-                        printf("Temperature: %f°C\n", 0.1 * ((th & 127) * 256 + tl) * (th > 127 ? -1 : 1));
+                        printf("Humidity: %.1f%%\n", 0.1 * (hh * 256 + hl));
+                        printf("Temperature: %.1f°C\n", 0.1 * ((th & 127) * 256 + tl) * (th > 127 ? -1 : 1));
                         _next->Humidity10 = hh * 256 + hl;
                         _next->Temperature10 = ((th & 127) * 256 + tl) * (th > 127 ? -1 : 1) + 2732;
                     }
